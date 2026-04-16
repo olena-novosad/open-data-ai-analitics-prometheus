@@ -1,0 +1,122 @@
+services:
+
+  db:
+    image: postgres:15
+    container_name: analytics_db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - analytics_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  data_load:
+    build:
+      context: ..
+      dockerfile: data_load/Dockerfile
+    container_name: data_load_service
+    env_file:
+      - .env
+    volumes:
+      - ../data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - analytics_network
+
+  data_quality_analysis:
+    build:
+      context: ..
+      dockerfile: data_quality_analysis/Dockerfile
+    container_name: data_quality_service
+    env_file:
+      - .env
+    volumes:
+      - ../reports:/app/reports
+    depends_on:
+      db:
+        condition: service_healthy
+      data_load:
+        condition: service_started
+    networks:
+      - analytics_network
+
+  data_research:
+    build:
+      context: ..
+      dockerfile: data_research/Dockerfile
+    container_name: data_research_service
+
+    env_file:
+      - .env
+    volumes:
+      - ../reports:/app/reports
+      - ../plots:/app/plots
+    depends_on:
+      db:
+        condition: service_healthy
+      data_load:
+        condition: service_started
+    networks:
+      - analytics_network
+
+  visualization:
+    build:
+      context: ..
+      dockerfile: visualization/Dockerfile
+    container_name: visualization_service
+    env_file:
+      - .env
+    volumes:
+      - ../plots:/app/plots
+    depends_on:
+      db:
+        condition: service_healthy
+      data_load:
+        condition: service_started
+    networks:
+      - analytics_network
+
+  web:
+    build:
+      context: ..
+      dockerfile: web/Dockerfile
+    container_name: web_service
+    env_file:
+      - .env
+    ports:
+      - "${WEB_PORT}:8000"
+    volumes:
+      - ../reports:/app/reports
+      - ../data:/app/data
+      - ../plots:/app/static
+      - ../plots:/app/plots
+    depends_on:
+      data_quality_analysis:
+        condition: service_started
+      data_research:
+        condition: service_started
+      visualization:
+        condition: service_started
+    networks:
+      - analytics_network
+
+volumes:
+  postgres_data:
+
+networks:
+  analytics_network:
+    name: analytics_network
+    driver: bridge

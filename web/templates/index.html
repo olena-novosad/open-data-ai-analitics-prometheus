@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ project.title }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        h1, h2 {
+            color: #163b65;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        a {
+            color: #2563eb;
+        }
+
+        .json-box {
+            background: #111827;
+            color: #f9fafb;
+            padding: 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .plots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .plot-card {
+            background: #f8fbff;
+            border: 1px solid #dbe7f3;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .plot-card img {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .plot-card p {
+            margin: 10px 0 0;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .empty {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .metrics {
+            margin-top: 12px;
+            padding-left: 18px;
+        }
+
+        .metrics li {
+            margin-bottom: 6px;
+        }
+
+        pre {
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #dbe7f3;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #eaf2fb;
+            color: #163b65;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8fbff;
+        }
+
+.table-wrapper {
+    overflow-x: auto;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="card">
+            <h1>{{ project.title }}</h1>
+            <p><strong>{{ project.subtitle }}</strong></p>
+            <p>
+                Це контейнеризований проєкт для аналізу екологічної та радіаційної
+                обстановки в зоні розташування атомних електростанцій України.
+            </p>
+            <p><strong>Мета проєкту:</strong> {{ project.goal }}</p>
+            <p><strong>Джерело даних:</strong> {{ project.source_name }}</p>
+            <p>
+                <a href="{{ project.source_url }}" target="_blank">{{ project.source_url }}</a>
+            </p>
+            <p>{{ project.source_description }}</p>
+        </div>
+        <div class="card">
+            <h2>Попередній перегляд даних</h2>
+
+            {% if df_preview %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                {% for col in columns %}
+                                    <th>{{ col }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in df_preview %}
+                                <tr>
+                                    {% for col in columns %}
+                                        <td>{{ row[col] }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Дані ще недоступні.</p>
+            {% endif %}
+        </div>
+        <div class="card">
+            <h2>Результати перевірки якості даних</h2>
+
+            {% if quality_report %}
+                {% if quality_report.general_info %}
+                    <ul class="metrics">
+                        <li><strong>Кількість рядків:</strong> {{ quality_report.general_info.shape.rows }}</li>
+                        <li><strong>Кількість стовпців:</strong> {{ quality_report.general_info.shape.columns }}</li>
+                        <li><strong>Кількість дублікатів:</strong> {{ quality_report.duplicates.duplicate_rows_count }}</li>
+                        <li><strong>Кількість унікальних станцій:</strong> {{ quality_report.stations.unique_count }}</li>
+                    </ul>
+                {% endif %}
+
+                <h3>JSON-звіт</h3>
+                <div class="json-box">
+                    <pre>{{ quality_report }}</pre>
+                </div>
+            {% else %}
+                <p class="empty">Файл звіту перевірки якості даних поки не знайдено.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Результати дослідження даних</h2>
+
+            {% if research_report %}
+                {% if research_report.dataset_info %}
+                    <ul class="metrics">
+                        <li><strong>Кількість рядків:</strong> {{ research_report.dataset_info.rows }}</li>
+                        <li><strong>Кількість стовпців:</strong> {{ research_report.dataset_info.columns }}</li>
+                        <li><strong>Початок періоду:</strong> {{ research_report.dataset_info.period_range.start }}</li>
+                        <li><strong>Кінець періоду:</strong> {{ research_report.dataset_info.period_range.end }}</li>
+                    </ul>
+                {% endif %}
+
+                <h3>JSON-звіт</h3>
+                <div class="json-box">
+                    <pre>{{ research_report }}</pre>
+                </div>
+            {% else %}
+                <p class="empty">Файл звіту дослідження поки не знайдено.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Візуалізації</h2>
+
+            {% if plot_files %}
+                <div class="plots">
+                    {% for plot in plot_files %}
+                        <div class="plot-card">
+                            <img src="{{ url_for('static', filename=plot) }}" alt="{{ plot }}">
+                            <p>{{ plot }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty">Графіки поки не знайдено.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+{
+    "general_info": {
+        "shape": {
+            "rows": 128,
+            "columns": 16
+        },
+        "columns": [
+            "year",
+            "quarter",
+            "station",
+            "irg",
+            "irg_index",
+            "iodine_ radionuclides",
+            "iodine_ radionuclides_index",
+            "stable_radionuclides",
+            "stable_ radionuclides_index",
+            "cs_137_emission",
+            "co_60_ emission",
+            "cs_137_dump",
+            "co_60_dump",
+            "volume",
+            "index_radioactive_releas",
+            "index_dump"
+        ],
+        "dtypes": {
+            "year": "int64",
+            "quarter": "int64",
+            "station": "str",
+            "irg": "float64",
+            "irg_index": "float64",
+            "iodine_ radionuclides": "float64",
+            "iodine_ radionuclides_index": "float64",
+            "stable_radionuclides": "float64",
+            "stable_ radionuclides_index": "float64",
+            "cs_137_emission": "float64",
+            "co_60_ emission": "float64",
+            "cs_137_dump": "float64",
+            "co_60_dump": "float64",
+            "volume": "float64",
+            "index_radioactive_releas": "float64",
+            "index_dump": "float64"
+        }
+    },
+    "missing_values": {
+        "total_missing_per_column": {
+            "year": 0,
+            "quarter": 0,
+            "station": 0,
+            "irg": 13,
+            "irg_index": 13,
+            "iodine_ radionuclides": 13,
+            "iodine_ radionuclides_index": 13,
+            "stable_radionuclides": 13,
+            "stable_ radionuclides_index": 13,
+            "cs_137_emission": 13,
+            "co_60_ emission": 13,
+            "cs_137_dump": 13,
+            "co_60_dump": 30,
+            "volume": 13,
+            "index_radioactive_releas": 13,
+            "index_dump": 13
+        },
+        "missing_ratio_per_column": {
+            "co_60_dump": 0.234375,
+            "irg": 0.1015625,
+            "iodine_ radionuclides": 0.1015625,
+            "iodine_ radionuclides_index": 0.1015625,
+            "stable_radionuclides": 0.1015625,
+            "co_60_ emission": 0.1015625,
+            "stable_ radionuclides_index": 0.1015625,
+            "irg_index": 0.1015625,
+            "cs_137_dump": 0.1015625,
+            "volume": 0.1015625,
+            "index_radioactive_releas": 0.1015625,
+            "cs_137_emission": 0.1015625,
+            "index_dump": 0.1015625,
+            "quarter": 0.0,
+            "station": 0.0,
+            "year": 0.0
+        }
+    },
+    "duplicates": {
+        "duplicate_rows_count": 0
+    },
+    "stations": {
+        "unique_count": 4,
+        "list": [
+            "ЗАЕС",
+            "РАЕС",
+            "ПАЕС",
+            "ХАЕС"
+        ],
+        "unexpected_stations": []
+    },
+    "rows_with_missing": {
+        "count": 30
+    },
+    "type_validation": {
+        "valid": true,
+        "issues": {}
+    },
+    "value_validation": {
+        "valid": true,
+        "issues": {
+            "quarter_out_of_range": {
+                "count": 0
+            },
+            "invalid_year": {
+                "count": 0
+            },
+            "negative_values": {}
+        }
+    },
+    "analysis_conclusions": {
+        "missing_data_analysis": "Аналіз пропущених значень виявив два ключові аспекти. По-перше, з 2022 року повністю відсутні дані щодо Запорізької АЕС, що пов’язано з воєнними діями. По-друге, для Хмельницької АЕС відсутні дані за показником co_60_dump (скиди Кобальту-60). Це може свідчити про специфіку моніторингу або про незафіксовані нульові значення.",
+        "data_handling_recommendations": "Ці особливості необхідно враховувати під час подальшого аналізу та візуалізації результатів. Видалення таких записів є недоцільним через невеликий обсяг даних. Заповнення пропусків середніми значеннями також не є коректним для даних екологічного та радіологічного характеру, оскільки це може спотворити реальну картину показників.",
+        "quality_summary": [
+            "У наборі даних виявлено пропущені значення, які слід враховувати під час подальшого аналізу.",
+            "Дублікатів рядків не виявлено.",
+            "Типи даних у ключових стовпцях відповідають очікуваним.",
+            "Некоректних значень у ключових полях не виявлено."
+        ]
+    }
+}
