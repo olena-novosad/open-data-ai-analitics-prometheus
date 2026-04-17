@@ -3,7 +3,7 @@ variable "resource_group_name" {
 }
 
 variable "location" {
-  default = "swedencentral"
+  default = "eastus2"
 }
 
 variable "vm_name" {
@@ -15,5 +15,5 @@ variable "admin_username" {
 }
 
 variable "repo_url" {
-  default = "https://github.com/olena-novosad/open-data-ai-analytics-prometheus.git"
+  default = "https://github.com/olena-novosad/open-data-ai-analitics-prometheus.git"
 }
