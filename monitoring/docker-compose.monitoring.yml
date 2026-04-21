@@ -48,7 +48,7 @@ services:
     restart: unless-stopped
 
   cadvisor:
-    image: ghcr.io/google/cadvisor:0.56.1
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
     container_name: cadvisor
     privileged: true
     devices:
@@ -60,8 +60,8 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    ports:
-      - "8081:8080"
+    expose:
+      - 8080
     networks:
       - analytics_network
     restart: unless-stopped

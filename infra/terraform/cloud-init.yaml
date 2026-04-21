@@ -6,21 +6,22 @@ packages:
   - curl
 
 runcmd:
-  - curl -fsSL https://get.docker.com -o get-docker.sh
-  - sh get-docker.sh
+  # 1. Встановлення Docker та Docker Compose V2 (стабільний метод для Ubuntu 20.04)
+  - apt-get update
+  - apt-get install -y docker.io
   - systemctl enable --now docker
-  - systemctl start docker
 
+  # Встановлюємо Docker Compose як плагін
   - mkdir -p /usr/local/lib/docker/cli-plugins/
-  - curl -SL https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+  - curl -SL https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
   - chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-  - docker --version
-  - docker compose version
-
+  # 2. Підготовка папки проєкту
   - mkdir -p /app
   - git clone ${repo_url} /app
+  - chown -R azureuser:azureuser /app
 
+  # 3. Створення .env файлу за вірним шляхом
   - |
     cat > /app/docker/.env <<EOF
     POSTGRES_DB=analytics_db
@@ -31,9 +32,12 @@ runcmd:
     WEB_PORT=80
     EOF
 
-  # Спочатку підіймаємо основний застосунок
-  - cd /app/docker && docker compose up -d
-  # Даємо час на створення мережі та бази
-  - sleep 10
-  # Потім підіймаємо стек моніторингу
-  - cd /app/monitoring && docker compose -f docker-compose.monitoring.yml up -d
+  # 4. Запуск основного застосунку
+  - cd /app/docker && /usr/local/lib/docker/cli-plugins/docker-compose up -d
+
+  # Даємо базі даних та мережі час на ініціалізацію
+  - sleep 15
+
+  - cd /app/infra/monitoring && /usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.monitoring.yml up -d
+
+final_message: "The system is finally up, after all the debugging!"
