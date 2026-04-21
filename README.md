@@ -109,8 +109,8 @@ cAdvisor збирає метрики Docker-контейнерів, зокрем
 
 ## Як відкрити Grafana
 
-Після розгортання Grafana доступна через браузер за адресою: http://PUBLIC_IP:3000
-, де PUBLIC_IP — публічна IP-адреса Azure VM.
+Після розгортання Grafana доступна через браузер за адресою: http://PUBLIC_IP:3000, де PUBLIC_IP — публічна IP-адреса Azure VM.
+
 ---
 
 ## Підключення Prometheus у Grafana
