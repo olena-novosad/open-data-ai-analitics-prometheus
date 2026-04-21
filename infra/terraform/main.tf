@@ -114,7 +114,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   name                = var.vm_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  size                = "Standard_B1s"
+  size                = "Standard_B2s_v2"
   admin_username      = var.admin_username
 
   network_interface_ids = [
@@ -132,10 +132,10 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
+  publisher = "Canonical"
+  offer     = "0001-com-ubuntu-server-focal"
+  sku       = "20_04-lts"
+  version   = "latest"
   }
 
   # Передача cloud-init через custom_data

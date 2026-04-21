@@ -3,7 +3,7 @@ variable "resource_group_name" {
 }
 
 variable "location" {
-  default = "eastus2"
+  default = "Sweden Central"
 }
 
 variable "vm_name" {
