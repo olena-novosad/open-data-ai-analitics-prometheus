@@ -3,6 +3,7 @@ services:
   db:
     image: postgres:15
     container_name: analytics_db
+    restart: unless-stopped
     env_file:
       - .env
     environment:
@@ -26,6 +27,7 @@ services:
       context: ..
       dockerfile: data_load/Dockerfile
     container_name: data_load_service
+    restart: on-failure
     env_file:
       - .env
     volumes:
@@ -41,6 +43,7 @@ services:
       context: ..
       dockerfile: data_quality_analysis/Dockerfile
     container_name: data_quality_service
+    restart: on-failure
     env_file:
       - .env
     volumes:
@@ -58,6 +61,7 @@ services:
       context: ..
       dockerfile: data_research/Dockerfile
     container_name: data_research_service
+    restart: on-failure
 
     env_file:
       - .env
@@ -77,6 +81,7 @@ services:
       context: ..
       dockerfile: visualization/Dockerfile
     container_name: visualization_service
+    restart: on-failure
     env_file:
       - .env
     volumes:
@@ -94,6 +99,7 @@ services:
       context: ..
       dockerfile: web/Dockerfile
     container_name: web_service
+    restart: unless-stopped
     env_file:
       - .env
     ports:

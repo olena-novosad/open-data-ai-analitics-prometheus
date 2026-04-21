@@ -33,11 +33,11 @@ runcmd:
     EOF
 
   # 4. Запуск основного застосунку
-  - cd /app/docker && /usr/local/lib/docker/cli-plugins/docker-compose up -d
+  - cd /app/docker && docker compose up -d
 
   # Даємо базі даних та мережі час на ініціалізацію
   - sleep 15
 
-  - cd /app/infra/monitoring && /usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.monitoring.yml up -d
+  - cd /app/monitoring && docker compose -f docker-compose.monitoring.yml up -d
 
 final_message: "The system is finally up, after all the debugging!"
