@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-gitops-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/olena-novosad/open-data-ai-analitics-prometheus.git'
+    targetRevision: main
+    path: gitops/app
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: analytics-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

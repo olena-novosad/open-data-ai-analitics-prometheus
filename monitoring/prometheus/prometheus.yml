@@ -18,4 +18,4 @@ scrape_configs:
   - job_name: "web_app"
     metrics_path: /metrics
     static_configs:
-      - targets: ["web_service:8000"]
+      - targets: ["10.0.1.4:30080"]

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analytics-web-deployment
+  namespace: analytics-app
+  labels:
+    app: analytics-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: analytics-web
+  template:
+    metadata:
+      labels:
+        app: analytics-web
+    spec:
+      containers:
+        - name: web-container
+          image: ghcr.io/olena-novosad/analytics-web:v1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+            - name: APP_ENV
+              value: "gitops"
+
+            - name: POSTGRES_DB
+              value: "analytics_db"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_HOST
+              value: "10.0.1.4"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: TABLE_NAME
+              value: "nuclear_data"
+
+          volumeMounts:
+            - name: reports-volume
+              mountPath: /app/reports
+            - name: data-volume
+              mountPath: /app/data
+            - name: plots-volume
+              mountPath: /app/plots
+            - name: plots-volume
+              mountPath: /app/static
+
+      volumes:
+        - name: reports-volume
+          hostPath:
+            path: /app/reports
+            type: Directory
+        - name: data-volume
+          hostPath:
+            path: /app/data
+            type: Directory
+        - name: plots-volume
+          hostPath:
+            path: /app/plots
+            type: Directory
